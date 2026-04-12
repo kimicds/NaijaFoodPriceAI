@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}FoodPriceNG{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0b0f0a;
+      --surface:  #131812;
+      --card:     #1a2118;
+      --border:   #2a3628;
+      --accent:   #7eca5c;
+      --accent2:  #c8e84a;
+      --muted:    #4a5e44;
+      --text:     #e8f0e5;
+      --textdim:  #8a9e84;
+      --danger:   #e06c4c;
+      --ff-head:  'Syne', sans-serif;
+      --ff-body:  'DM Sans', sans-serif;
+      --radius:   12px;
+      --trans:    .2s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--ff-body);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── NAV ── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 2.5rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      position: sticky; top: 0; z-index: 100;
+    }
+
+    .nav-brand {
+      font-family: var(--ff-head);
+      font-weight: 800;
+      font-size: 1.3rem;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-brand span { color: var(--accent2); }
+
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: var(--textdim);
+      text-decoration: none;
+      font-size: .9rem;
+      font-weight: 500;
+      letter-spacing: .02em;
+      transition: color var(--trans);
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+
+    /* ── MAIN ── */
+    main { flex: 1; padding: 3rem 2.5rem; max-width: 900px; margin: 0 auto; width: 100%; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: .8rem;
+    }
+
+    /* ── UTILITIES ── */
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: .25rem .75rem;
+      border-radius: 100px;
+      background: color-mix(in srgb, var(--accent) 12%, transparent);
+      color: var(--accent);
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+      padding: .85rem 2rem;
+      border: none; border-radius: var(--radius);
+      font-family: var(--ff-body); font-size: .95rem; font-weight: 600;
+      cursor: pointer; text-decoration: none;
+      transition: all var(--trans);
+    }
+    .btn-primary {
+      background: var(--accent); color: var(--bg);
+    }
+    .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); box-shadow: 0 8px 24px color-mix(in srgb, var(--accent) 30%, transparent); }
+    .btn-ghost { background: transparent; color: var(--accent); border: 1px solid var(--border); }
+    .btn-ghost:hover { border-color: var(--accent); }
+
+    h1,h2,h3 { font-family: var(--ff-head); }
+  </style>
+  {% block extra_style %}{% endblock %}
+</head>
+<body>
+  <nav>
+    <a href="/" class="nav-brand">Food<span>Price</span>NG</a>
+    <ul class="nav-links">
+      <li><a href="/" {% if request.path=='/' %}class="active"{% endif %}>Home</a></li>
+      <li><a href="/predict" {% if request.path=='/predict' %}class="active"{% endif %}>Predict</a></li>
+      <li><a href="/about" {% if request.path=='/about' %}class="active"{% endif %}>About</a></li>
+    </ul>
+  </nav>
+
+  <main>{% block content %}{% endblock %}</main>
+
+  <footer>© 2025 FoodPriceNG · Powered by Machine Learning</footer>
+</body>
+</html>

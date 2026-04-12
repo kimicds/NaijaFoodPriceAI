@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block title %}Price Result — FoodPriceNG{% endblock %}
+
+{% block extra_style %}
+<style>
+  .result-wrapper {
+    max-width: 560px;
+    margin: 3rem auto;
+    text-align: center;
+  }
+
+  .result-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 3rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .result-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+
+  .result-card .label {
+    font-size: .75rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    font-weight: 600;
+    margin-bottom: .5rem;
+  }
+
+  .result-card .food-name {
+    font-family: var(--ff-head);
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: var(--text);
+  }
+
+  .price-display {
+    font-family: var(--ff-head);
+    font-size: clamp(3rem, 10vw, 5rem);
+    font-weight: 800;
+    line-height: 1;
+    color: var(--accent);
+    margin-bottom: .5rem;
+  }
+
+  .currency { font-size: .45em; color: var(--muted); vertical-align: super; }
+
+  .price-note {
+    font-size: .85rem;
+    color: var(--textdim);
+    margin-bottom: 2.5rem;
+  }
+
+  .meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .75rem;
+    text-align: left;
+    margin-bottom: 2rem;
+  }
+
+  .meta-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: .85rem 1rem;
+  }
+
+  .meta-item .key   { font-size: .7rem; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; margin-bottom: .25rem; }
+  .meta-item .value { font-size: .9rem; font-weight: 600; color: var(--text); }
+
+  .actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .disclaimer {
+    margin-top: 2rem;
+    font-size: .78rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="result-wrapper">
+  <div class="result-card">
+    <div class="label">Predicted Market Price</div>
+    <div class="food-name">{{ food_item | capitalize }} · {{ category }}</div>
+
+    <div class="price-display">
+      <span class="currency">₦</span>{{ "{:,.2f}".format(price) }}
+    </div>
+    <div class="price-note">Estimated price as of {{ date }}</div>
+
+    <div class="meta-grid">
+      <div class="meta-item">
+        <div class="key">Store</div>
+        <div class="value">{{ store }}</div>
+      </div>
+      <div class="meta-item">
+        <div class="key">Vendor Type</div>
+        <div class="value">{{ vendor }}</div>
+      </div>
+      <div class="meta-item">
+        <div class="key">Category</div>
+        <div class="value">{{ food_cat }}</div>
+      </div>
+      <div class="meta-item">
+        <div class="key">Package</div>
+        <div class="value">{{ category }}</div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <a href="/predict" class="btn btn-primary">← New Prediction</a>
+      <a href="/"        class="btn btn-ghost">Home</a>
+    </div>
+  </div>
+
+  <p class="disclaimer">
+    ⚠️ This is a machine-learning estimate based on historical market data.
+    Actual prices may vary by location, season, and market conditions.
+  </p>
+</div>
+{% endblock %}

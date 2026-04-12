@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+{% block title %}Predict Price — FoodPriceNG{% endblock %}
+
+{% block extra_style %}
+<style>
+  .page-header { margin-bottom: 2.5rem; }
+  .page-header h1 { font-size: 2.2rem; font-weight: 800; letter-spacing: -1px; margin-bottom: .5rem; }
+  .page-header p  { color: var(--textdim); font-size: .95rem; }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+
+  .form-group { display: flex; flex-direction: column; gap: .5rem; }
+  .form-group.full { grid-column: 1 / -1; }
+
+  label {
+    font-size: .78rem;
+    font-weight: 600;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--textdim);
+  }
+
+  select, input[type="date"], input[type="number"] {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: var(--ff-body);
+    font-size: .95rem;
+    padding: .8rem 1rem;
+    width: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    transition: border-color var(--trans), box-shadow var(--trans);
+  }
+
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234a5e44' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+  }
+
+  select:focus, input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent);
+  }
+
+  /* Location row */
+  .loc-row { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+
+  /* Section label */
+  .section-sep {
+    grid-column: 1 / -1;
+    display: flex; align-items: center; gap: 1rem;
+    margin: .5rem 0;
+  }
+  .section-sep span { font-size: .75rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .08em; white-space: nowrap; }
+  .section-sep::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* Info box */
+  .info-box {
+    grid-column: 1 / -1;
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    font-size: .85rem;
+    color: var(--textdim);
+    line-height: 1.6;
+  }
+
+  .info-box strong { color: var(--accent); }
+
+  /* Submit */
+  .submit-row {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: .5rem;
+  }
+
+  .btn-primary { width: 100%; justify-content: center; padding: 1rem; font-size: 1rem; }
+
+  @media (max-width: 600px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .form-group.full { grid-column: 1; }
+    .section-sep,.submit-row,.info-box { grid-column: 1; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <span class="chip" style="margin-bottom:.75rem;">Price Estimator</span>
+  <h1>Get a Price Estimate</h1>
+  <p>Fill in the details below and our model will predict the current market price.</p>
+</div>
+
+<form action="/result" method="POST">
+  <div class="form-grid">
+
+    <!-- ── PRODUCT ── -->
+    <div class="section-sep"><span>Product</span></div>
+
+    <div class="form-group">
+      <label for="food_category">Category</label>
+      <select id="food_category" name="food_category" required>
+        <option value="" disabled selected>Select category</option>
+        {% for cat in food_category_list %}
+          <option value="{{ cat }}">{{ cat }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="food_item">Food Item</label>
+      <select id="food_item" name="food_item" required>
+        <option value="" disabled selected>Select item</option>
+        {% for item in food_item_list %}
+          <option value="{{ item }}">{{ item | capitalize }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group full">
+      <label for="category_idx">Package / Quantity</label>
+      <select id="category_idx" name="category_idx" required>
+        <option value="" disabled selected>Select package size</option>
+        {% for idx, lbl in category_options %}
+          <option value="{{ idx }}">{{ lbl }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- ── STORE ── -->
+    <div class="section-sep"><span>Store</span></div>
+
+    <div class="form-group">
+      <label for="vendor_type">Vendor Type</label>
+      <select id="vendor_type" name="vendor_type" required>
+        <option value="" disabled selected>Select vendor</option>
+        {% for v in vendor_list %}
+          <option value="{{ v }}">{{ v }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="store_visited">Store</label>
+      <select id="store_visited" name="store_visited" required>
+        <option value="" disabled selected>Select store</option>
+        {% for s in store_list %}
+          <option value="{{ s }}">{{ s }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- ── DATE ── -->
+    <div class="section-sep"><span>Date &amp; Location</span></div>
+
+    <div class="form-group">
+      <label for="date">Date</label>
+      <input type="date" id="date" name="date" required/>
+    </div>
+
+    <div class="form-group">
+      <label>Location (auto-detected)</label>
+      <div class="loc-row">
+        <input type="number" id="latitude"  name="latitude"  placeholder="Latitude"  step="any" value="6.5244"/>
+        <input type="number" id="longitude" name="longitude" placeholder="Longitude" step="any" value="3.3792"/>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <strong>📍 Location tip:</strong> Default coordinates are set to Lagos. Click the button to auto-detect your position, or enter your coordinates manually for a more accurate estimate.
+      <br/><br/>
+      <button type="button" class="btn btn-ghost" style="padding:.5rem 1.25rem;font-size:.85rem;" onclick="getLocation()">⊙ Use My Location</button>
+    </div>
+
+    <!-- ── SUBMIT ── -->
+    <div class="submit-row">
+      <button type="submit" class="btn btn-primary">→ Predict Price</button>
+    </div>
+
+  </div>
+</form>
+
+<script>
+  // Set today's date as default
+  document.getElementById('date').value = new Date().toISOString().split('T')[0];
+
+  function getLocation() {
+    if (!navigator.geolocation) { alert('Geolocation not supported'); return; }
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        document.getElementById('latitude').value  = pos.coords.latitude.toFixed(6);
+        document.getElementById('longitude').value = pos.coords.longitude.toFixed(6);
+      },
+      ()  => alert('Could not get location. Please enter manually.')
+    );
+  }
+</script>
+{% endblock %}

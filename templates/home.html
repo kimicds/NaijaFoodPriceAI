@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+{% block title %}FoodPriceNG — Food Price Intelligence{% endblock %}
+
+{% block extra_style %}
+<style>
+  .hero {
+    padding: 5rem 0 4rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .hero-badge { margin-bottom: 1.5rem; }
+
+  .hero h1 {
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    color: var(--text);
+    margin-bottom: 1.2rem;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .hero p {
+    color: var(--textdim);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    max-width: 420px;
+  }
+
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+  /* Floating card visual */
+  .hero-visual {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .price-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2rem;
+    width: 280px;
+    animation: float 4s ease-in-out infinite;
+    box-shadow: 0 40px 80px rgba(0,0,0,.5);
+  }
+
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-14px); }
+  }
+
+  .price-card .label { font-size: .78rem; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; margin-bottom: .3rem; }
+  .price-card .item  { font-family: var(--ff-head); font-size: 1.1rem; font-weight: 700; margin-bottom: 1.5rem; }
+  .price-card .price { font-family: var(--ff-head); font-size: 2.4rem; font-weight: 800; color: var(--accent); }
+  .price-card .price small { font-size: 1rem; color: var(--muted); }
+  .price-card .meta { margin-top: 1rem; font-size: .8rem; color: var(--textdim); display: flex; justify-content: space-between; }
+
+  .price-card .tag {
+    display: inline-block; margin-bottom: .5rem;
+    background: color-mix(in srgb, var(--accent2) 15%, transparent);
+    color: var(--accent2); border-radius: 6px;
+    padding: .15rem .5rem; font-size: .72rem; font-weight: 600;
+  }
+
+  /* Stats row */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    padding: 3rem 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    margin: 3rem 0;
+  }
+
+  .stat { text-align: center; }
+  .stat .num { font-family: var(--ff-head); font-size: 2.2rem; font-weight: 800; color: var(--accent); }
+  .stat .desc { font-size: .85rem; color: var(--textdim); margin-top: .3rem; }
+
+  /* How it works */
+  .section-title { font-size: 1.8rem; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 2rem; }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+  }
+
+  .step {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.75rem;
+    transition: border-color var(--trans), transform var(--trans);
+  }
+
+  .step:hover { border-color: var(--muted); transform: translateY(-3px); }
+
+  .step .num {
+    font-family: var(--ff-head); font-size: 2rem; font-weight: 800;
+    color: var(--border); margin-bottom: .75rem;
+  }
+
+  .step h3 { font-size: 1rem; font-weight: 700; margin-bottom: .5rem; }
+  .step p  { font-size: .88rem; color: var(--textdim); line-height: 1.6; }
+
+  @media (max-width: 720px) {
+    .hero { grid-template-columns: 1fr; gap: 3rem; padding: 3rem 0; }
+    .hero-visual { display: none; }
+    .stats { grid-template-columns: 1fr 1fr; }
+    .steps { grid-template-columns: 1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-text">
+    <div class="hero-badge"><span class="chip">🇳🇬 Nigeria Market Intelligence</span></div>
+    <h1>Predict <em>food prices</em> before you shop</h1>
+    <p>
+      ML-powered price estimates for everyday food items across Nigerian markets
+      from government stores to delivery apps.
+    </p>
+    <div class="hero-actions">
+      <a href="/predict" class="btn btn-primary">→ Get a Price Estimate</a>
+      <a href="/about"   class="btn btn-ghost">Learn More</a>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="price-card">
+      <span class="tag">AI Estimate</span>
+      <div class="label">Food Item</div>
+      <div class="item">Rice · 5 kg · Imported</div>
+      <div class="price">₦ 8,450 <small>/ bag</small></div>
+      <div class="meta">
+        <span>Glovo-Shoprite</span>
+        <span>Apr 2025</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="stats">
+  <div class="stat"><div class="num">17+</div><div class="desc">Food Items Covered</div></div>
+  <div class="stat"><div class="num">9</div><div class="desc">Stores Tracked</div></div>
+  <div class="stat"><div class="num">5</div><div class="desc">Food Categories</div></div>
+</div>
+
+<h2 class="section-title">How it works</h2>
+<div class="steps">
+  <div class="step">
+    <div class="num">01</div>
+    <h3>Choose your item</h3>
+    <p>Select the food category, specific item, store, and package size you want to check.</p>
+  </div>
+  <div class="step">
+    <div class="num">02</div>
+    <h3>Set the date</h3>
+    <p>Pick the date you plan to shop — our model accounts for seasonal price shifts.</p>
+  </div>
+  <div class="step">
+    <div class="num">03</div>
+    <h3>Get the prediction</h3>
+    <p>The ML model returns an estimated price in Naira based on market patterns.</p>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Error — FoodPriceNG{% endblock %}
+{% block content %}
+<div style="max-width:500px;margin:5rem auto;text-align:center;">
+  <div style="font-size:3rem;margin-bottom:1rem;">⚠️</div>
+  <h1 style="font-size:1.8rem;font-weight:800;margin-bottom:1rem;">Prediction Failed</h1>
+  <p style="color:var(--textdim);margin-bottom:2rem;line-height:1.6;">{{ error }}</p>
+  <a href="/predict" class="btn btn-primary">← Try Again</a>
+</div>
+{% endblock %}

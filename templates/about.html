@@ -1,0 +1,464 @@
+{% extends "base.html" %}
+{% block title %}About — FoodPriceNG{% endblock %}
+
+{% block extra_style %}
+<style>
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up   { animation: fadeUp .65s ease both; }
+  .delay-1   { animation-delay: .1s; }
+  .delay-2   { animation-delay: .22s; }
+  .delay-3   { animation-delay: .36s; }
+  .delay-4   { animation-delay: .50s; }
+
+  /* ── HERO ── */
+  .about-hero {
+    padding: 4rem 0 3.5rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 4rem;
+  }
+  .about-hero .eyebrow {
+    display: flex; align-items: center; gap: .75rem;
+    margin-bottom: 1.5rem;
+  }
+  .about-hero h1 {
+    font-size: clamp(2.2rem, 6vw, 3.6rem);
+    font-weight: 800; letter-spacing: -2px; line-height: 1.07;
+    max-width: 720px; margin-bottom: 1.5rem;
+  }
+  .about-hero h1 em { font-style: normal; color: var(--accent); }
+  .about-hero .lead {
+    color: var(--textdim); font-size: 1.05rem; line-height: 1.85;
+    max-width: 630px;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    height: 1px; background: var(--border);
+    margin: 4rem 0;
+  }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-size: .72rem; font-weight: 700;
+    letter-spacing: .13em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 1.5rem;
+  }
+
+  /* ── PROBLEM BLOCK ── */
+  .problem-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+    align-items: start;
+  }
+
+  .problem-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .problem-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--danger), var(--accent2), var(--accent));
+  }
+
+  .problem-card .prob-tag {
+    display: inline-flex; align-items: center; gap: .4rem;
+    font-size: .72rem; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--danger);
+    margin-bottom: 1.2rem;
+  }
+
+  .problem-card h2 {
+    font-size: 1.55rem; font-weight: 800;
+    letter-spacing: -.5px; line-height: 1.22;
+    margin-bottom: 1.25rem;
+  }
+
+  .problem-card p {
+    font-size: .9rem; color: var(--textdim);
+    line-height: 1.8; margin-bottom: 1rem;
+  }
+
+  .problem-card p:last-child { margin-bottom: 0; }
+
+  .problem-card strong.hl { color: var(--accent); }
+
+  .stats-col {
+    display: flex; flex-direction: column; gap: 1.25rem;
+  }
+
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.75rem 2rem;
+    transition: border-color .2s, transform .2s;
+  }
+
+  .stat-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+  .stat-card .val {
+    font-family: var(--ff-head);
+    font-size: 2.6rem; font-weight: 800;
+    color: var(--accent); line-height: 1;
+    margin-bottom: .4rem;
+  }
+
+  .stat-card .desc {
+    font-size: .85rem; color: var(--textdim); line-height: 1.5;
+  }
+
+  /* ── NITHUB BANNER ── */
+  .nithub-banner {
+    display: flex; align-items: center; gap: 1.5rem;
+    background: linear-gradient(135deg,
+      color-mix(in srgb, #238636 14%, var(--card)),
+      color-mix(in srgb, var(--accent) 6%, var(--card))
+    );
+    border: 1px solid color-mix(in srgb, #238636 40%, var(--border));
+    border-radius: 16px;
+    padding: 1.75rem 2rem;
+    margin-bottom: 4rem;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .nithub-banner::after {
+    content: 'NitHub';
+    position: absolute; right: -10px; top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--ff-head); font-size: 7rem; font-weight: 800;
+    color: color-mix(in srgb, #238636 8%, transparent);
+    pointer-events: none; user-select: none; letter-spacing: -4px;
+  }
+
+  .nithub-icon {
+    width: 50px; height: 50px;
+    background: color-mix(in srgb, #238636 20%, var(--surface));
+    border: 1px solid color-mix(in srgb, #238636 40%, var(--border));
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-size: 1.5rem;
+  }
+
+  .nithub-text { flex: 1; min-width: 220px; position: relative; z-index: 1; }
+  .nithub-text .ntitle {
+    font-family: var(--ff-head); font-size: 1.05rem;
+    font-weight: 700; margin-bottom: .4rem; color: var(--text);
+  }
+  .nithub-text .nsub {
+    font-size: .84rem; color: var(--textdim); line-height: 1.6;
+  }
+  .nithub-text .nsub a {
+    color: var(--accent); text-decoration: none; font-weight: 600;
+  }
+  .nithub-text .nsub a:hover { text-decoration: underline; }
+
+  .nithub-badge {
+    display: inline-flex; align-items: center; gap: .45rem;
+    background: color-mix(in srgb, #238636 22%, transparent);
+    border: 1px solid color-mix(in srgb, #238636 55%, transparent);
+    color: #3fb950; font-size: .74rem; font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase;
+    padding: .45rem 1rem; border-radius: 100px;
+    flex-shrink: 0; white-space: nowrap;
+    position: relative; z-index: 1;
+  }
+
+  /* ── CAPABILITIES ── */
+  .capabilities {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem; margin-bottom: 4rem;
+  }
+
+  .cap-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1.85rem;
+    transition: border-color .2s, transform .2s;
+    position: relative; overflow: hidden;
+  }
+
+  .cap-card::after {
+    content: ''; position: absolute;
+    bottom: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    opacity: 0; transition: opacity .25s;
+  }
+
+  .cap-card:hover { border-color: var(--muted); transform: translateY(-3px); }
+  .cap-card:hover::after { opacity: 1; }
+
+  .cap-icon {
+    width: 46px; height: 46px;
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    border-radius: 11px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.35rem; margin-bottom: 1.1rem;
+  }
+
+  .cap-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: .5rem; }
+  .cap-card p  { font-size: .875rem; color: var(--textdim); line-height: 1.7; }
+
+  /* ── TWO COL ── */
+  .two-col {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1.5rem; margin-bottom: 4rem; align-items: start;
+  }
+
+  /* ── PANEL ── */
+  .panel {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 2rem;
+  }
+  .panel h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 1.3rem; }
+
+  /* Feature list */
+  .feature-list { list-style: none; display: flex; flex-direction: column; gap: .9rem; }
+  .feature-list li {
+    display: flex; align-items: flex-start; gap: .8rem;
+    font-size: .88rem; color: var(--textdim); line-height: 1.55;
+  }
+  .tick {
+    width: 19px; height: 19px; border-radius: 50%; flex-shrink: 0;
+    background: color-mix(in srgb, var(--accent) 15%, transparent);
+    color: var(--accent); font-size: .65rem; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: .1rem;
+  }
+
+  /* Source list */
+  .source-list { display: flex; flex-direction: column; gap: .85rem; }
+  .source-item {
+    display: flex; align-items: center; gap: 1rem;
+    padding: .85rem 1rem; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 9px;
+    transition: border-color .2s;
+  }
+  .source-item:hover { border-color: var(--muted); }
+  .source-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+  .source-item .sname { font-size: .88rem; font-weight: 600; }
+  .source-item .stype { font-size: .76rem; color: var(--muted); margin-top: .1rem; }
+
+  /* ── TECH STACK ── */
+  .tech-row { display: flex; flex-wrap: wrap; gap: .75rem; margin-bottom: 4rem; }
+  .tech-pill {
+    display: inline-flex; align-items: center; gap: .5rem;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 100px; padding: .5rem 1.1rem;
+    font-size: .8rem; font-weight: 600; color: var(--textdim);
+    transition: border-color .2s, color .2s;
+  }
+  .tech-pill:hover { border-color: var(--accent); color: var(--accent); }
+  .tech-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+
+  /* ── WHO IS IT FOR ── */
+  .audience-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem; margin-bottom: 4rem;
+  }
+  .aud-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1.75rem;
+    transition: border-color .2s, transform .2s;
+  }
+  .aud-card:hover { border-color: var(--muted); transform: translateY(-2px); }
+  .aud-card .aud-icon { font-size: 1.8rem; margin-bottom: .9rem; }
+  .aud-card h3 { font-size: .95rem; font-weight: 700; margin-bottom: .5rem; }
+  .aud-card p  { font-size: .84rem; color: var(--textdim); line-height: 1.65; }
+
+  /* ── CTA ── */
+  .about-cta {
+    display: flex; align-items: center; justify-content: space-between;
+    background: linear-gradient(135deg,
+      color-mix(in srgb, var(--accent) 10%, var(--card)), var(--card));
+    border: 1px solid color-mix(in srgb, var(--accent) 25%, var(--border));
+    border-radius: 20px; padding: 2.75rem; gap: 2rem; flex-wrap: wrap;
+  }
+  .about-cta h2 {
+    font-size: 1.65rem; font-weight: 800;
+    letter-spacing: -.5px; margin-bottom: .55rem;
+  }
+  .about-cta p { color: var(--textdim); font-size: .92rem; max-width: 440px; line-height: 1.65; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 720px) {
+    .problem-grid  { grid-template-columns: 1fr; }
+    .capabilities  { grid-template-columns: 1fr; }
+    .two-col       { grid-template-columns: 1fr; }
+    .audience-grid { grid-template-columns: 1fr; }
+    .about-cta     { flex-direction: column; }
+    .nithub-banner::after { display: none; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ═══════════════════════════════════════════
+     HERO
+════════════════════════════════════════════ -->
+<div class="about-hero fade-up">
+  <div class="eyebrow">
+    <span class="chip">About the Project</span>
+    <span style="color:var(--muted);font-size:.85rem;">v1.0 &middot; Nigeria</span>
+  </div>
+  <h1>Bringing <em>data clarity</em><br/>to Nigeria's food markets</h1>
+  <p class="lead">
+    FoodPriceNG is an open-source machine-learning application that estimates the retail price
+    of everyday food items across Nigerian markets &mdash; from government price surveys to
+    supermarket chains and on-demand delivery platforms. We built this to put real market
+    intelligence in the hands of ordinary Nigerians, free of charge.
+  </p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     THE PROBLEM WE ARE SOLVING
+════════════════════════════════════════════ -->
+<div class="section-label fade-up delay-1">The Problem We Are Solving</div>
+<div class="problem-grid fade-up delay-2">
+
+  <div class="problem-card">
+    <div class="prob-tag">⚠ The Challenge</div>
+    <h2>Nigerian food prices are volatile, opaque, and impossible to track</h2>
+    <p>
+      Nigeria's ongoing inflation crisis has hit food prices the hardest. Between 2022 and 2024,
+      food inflation surged past <strong class="hl">35%</strong>, with everyday staples like rice,
+      cooking oil, and beans nearly doubling in cost within months. Yet ordinary households
+      have no reliable tool to know what a fair price looks like before they shop.
+    </p>
+    <p>
+      Market data exists &mdash; scattered across government surveys, delivery apps, and
+      supermarket records &mdash; but it is fragmented, inconsistent in format, and never
+      synthesised into a single usable signal. Traders exploit this information gap.
+      Consumers overpay. Policymakers react too slowly.
+    </p>
+    <p>
+      <strong style="color:var(--text);">FoodPriceNG closes that gap.</strong>
+      We collect data from 9 stores across multiple vendor types, apply a rigorous feature
+      engineering pipeline, and deliver a machine-learning price estimate in seconds &mdash;
+      free, for anyone with a phone or browser.
+    </p>
+  </div>
+
+  <div class="stats-col">
+    <div class="stat-card">
+      <div class="val">&gt;35%</div>
+      <div class="desc">Peak food inflation rate in Nigeria, 2024 — one of the highest on record</div>
+    </div>
+    <div class="stat-card">
+      <div class="val">9</div>
+      <div class="desc">Stores monitored spanning government outlets, supermarkets, and delivery apps</div>
+    </div>
+    <div class="stat-card">
+      <div class="val">17</div>
+      <div class="desc">Essential food items covered across 5 categories — staples, protein, and more</div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     NITHUB AI ECOSYSTEM
+════════════════════════════════════════════ -->
+<div class="nithub-banner fade-up delay-3">
+  <div class="nithub-icon">🚀</div>
+  <div class="nithub-text">
+    <div class="ntitle">Part of the NitHub AI Ecosystem</div>
+    <div class="nsub">
+      This project is proudly built under the <strong>NitHub AI Ecosystem</strong> &mdash;
+      a community driving open-source innovation, AI-assisted development, and modern MLOps
+      practices across Africa. FoodPriceNG represents NitHub's commitment to applying
+      technology to real socioeconomic challenges on the continent.
+      <br/>
+      <a href="https://nithub.unilag.edu.ng" target="_blank" rel="noopener">
+        Learn more about NitHub &rarr;
+      </a>
+    </div>
+  </div>
+  <div class="nithub-badge">
+    ✦ NitHub AI Ecosystem
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     WHO IS THIS FOR
+════════════════════════════════════════════ -->
+<div class="section-label fade-up">Who Is This For</div>
+<div class="audience-grid fade-up">
+  <div class="aud-card">
+    <div class="aud-icon">🏠</div>
+    <h3>Households &amp; Shoppers</h3>
+    <p>Check estimated prices before heading to market or ordering online. Know when you're being overcharged and shop with confidence.</p>
+  </div>
+  <div class="aud-card">
+    <div class="aud-icon">📊</div>
+    <h3>Researchers &amp; Analysts</h3>
+    <p>Access a structured, ML-validated lens on Nigerian food price trends for economic research, journalism, and policy analysis.</p>
+  </div>
+  <div class="aud-card">
+    <div class="aud-icon">🏛️</div>
+    <h3>Policymakers &amp; NGOs</h3>
+    <p>Understand real-time price variation across vendor types and locations to design more effective food security interventions.</p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     CORE CAPABILITIES
+════════════════════════════════════════════ -->
+<div class="section-label fade-up">Core Capabilities</div>
+<div class="capabilities fade-up">
+  <div class="cap-card">
+    <div class="cap-icon">🤖</div>
+    <h3>ML-Powered Predictions</h3>
+    <p>A gradient-boosted model trained on historical Nigerian market data. Log-transformation of the target variable ensures strong accuracy across the full price range &mdash; from cheap staples to premium imports.</p>
+  </div>
+ 
+  <div class="cap-card">
+    <div class="cap-icon">📅</div>
+    <h3>Seasonal Intelligence</h3>
+    <p>Date-derived features &mdash; month, quarter, and day &mdash; capture the seasonal price swings driven by Nigeria's agricultural cycles, festive demand surges, and currency fluctuation patterns.</p>
+  </div>
+  <div class="cap-card">
+    <div class="cap-icon">📍</div>
+    <h3>Geospatial Awareness</h3>
+    <p>GPS coordinates allow the model to reflect price variation across neighbourhoods and store types &mdash; from an NBS government survey point to a Glovo delivery hub in Victoria Island.</p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     CTA
+════════════════════════════════════════════ -->
+<div class="about-cta fade-up">
+  <div>
+    <h2>Ready to check prices?</h2>
+    <p>
+      Enter your item, store, and date to get an instant ML-powered price estimate in
+      Nigerian Naira. Free. No sign-up required.
+    </p>
+  </div>
+  <a href="/predict" class="btn btn-primary" style="flex-shrink:0; padding:1rem 2.25rem; font-size:1rem;">
+    &rarr; Try a Prediction
+  </a>
+</div>
+
+{% endblock %}
