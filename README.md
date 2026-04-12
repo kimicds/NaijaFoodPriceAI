@@ -48,5 +48,5 @@ MIT License — see `LICENSE` for details.
 ---
 
 <p align="center">
-  Built with ❤️ under the <strong>NitHub AI Ecosystem</strong> · Nigeria 🇳🇬
+  Built under the <strong>NitHub AI Ecosystem</strong> · Nigeria 🇳🇬
 </p
