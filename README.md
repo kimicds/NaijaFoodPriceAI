@@ -29,7 +29,7 @@ This project is proudly developed under the **[NitHub AI Ecosystem](https://nith
 ```
 food_price_app/
 ├── app.py                  # Flask app 
-├── food_price_new_model.pkl  # ← your trained model
+├── food_price_new_model.pkl  #trained model
 ├── requirements.txt
 ├── Procfile                # for Render 
 └── templates/
