@@ -26,20 +26,20 @@ This project is proudly developed under the **[NitHub AI Ecosystem](https://nith
 
 ## Project Structure
 
+```
 food_price_app/
-│
-├── app.py                      # Flask application — main entry point
-├── food_price_new_model.pkl    # Trained XGBoost model (place in root)
-├── requirements.txt            # Python dependencies
-├── Procfile                    # Deployment config for Render / Railway
-│
+├── app.py                  # Flask app 
+├── food_price_new_model.pkl  # ← your trained model
+├── requirements.txt
+├── Procfile                # for Render 
 └── templates/
-├── base.html               # Shared layout, nav and footer
-├── home.html               # Landing page
-├── prediction.html         # Prediction form
-├── result.html             # Predicted price result
-├── about.html              # About the project
-└── error.html              # Error fallback page
+    ├── base.html
+    ├── home.html
+    ├── prediction.html
+    ├── result.html
+    ├── about.html
+    └── error.html
+```
 
 ## License
 
